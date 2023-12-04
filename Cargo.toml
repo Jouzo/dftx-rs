@@ -1,0 +1,9 @@
+[patch.crates-io]
+bitcoin = { git = "https://github.com/Jouzo/rust-bitcoin.git" }
+bitcoin-io = { git = "https://github.com/Jouzo/rust-bitcoin.git" }
+
+[workspace]
+members = [
+    "dftx-rs",
+    "dftx-macro"
+]
