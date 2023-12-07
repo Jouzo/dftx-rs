@@ -1,5 +1,4 @@
-use bitcoin::impl_consensus_encoding;
-use bitcoin::io;
+use bitcoin::{impl_consensus_encoding, io};
 use dftx_macro::ConsensusEncoding;
 
 use super::common::CompactVec;

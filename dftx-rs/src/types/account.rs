@@ -1,9 +1,10 @@
-use bitcoin::{impl_consensus_encoding, ScriptBuf};
-use bitcoin::{io, VarInt};
+use bitcoin::{impl_consensus_encoding, io, ScriptBuf, VarInt};
 use dftx_macro::ConsensusEncoding;
 
-use super::balance::{ScriptBalances, TokenBalanceUInt32, TokenBalanceVarInt};
-use super::common::CompactVec;
+use super::{
+    balance::{ScriptBalances, TokenBalanceUInt32, TokenBalanceVarInt},
+    common::CompactVec,
+};
 
 #[derive(ConsensusEncoding, Debug, PartialEq, Eq)]
 pub struct UtxosToAccount {

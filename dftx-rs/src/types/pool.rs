@@ -1,14 +1,10 @@
-use bitcoin::impl_consensus_encoding;
-use bitcoin::io;
-use bitcoin::ScriptBuf;
-use bitcoin::VarInt;
+use bitcoin::{impl_consensus_encoding, io, ScriptBuf, VarInt};
 use dftx_macro::ConsensusEncoding;
 
-use super::balance::ScriptBalances;
-use super::balance::TokenBalanceUInt32;
-use super::balance::TokenBalanceVarInt;
-use super::common::CompactVec;
-use super::common::Maybe;
+use super::{
+    balance::{ScriptBalances, TokenBalanceUInt32, TokenBalanceVarInt},
+    common::{CompactVec, Maybe},
+};
 
 #[derive(ConsensusEncoding, Debug, PartialEq, Eq)]
 pub struct MaxPrice {

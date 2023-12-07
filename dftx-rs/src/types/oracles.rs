@@ -1,11 +1,10 @@
-use bitcoin::hash_types::Txid;
-use bitcoin::impl_consensus_encoding;
-use bitcoin::io;
-use bitcoin::ScriptBuf;
+use bitcoin::{hash_types::Txid, impl_consensus_encoding, io, ScriptBuf};
 use dftx_macro::ConsensusEncoding;
 
-use super::common::CompactVec;
-use super::price::{CurrencyPair, TokenPrice};
+use super::{
+    common::CompactVec,
+    price::{CurrencyPair, TokenPrice},
+};
 
 #[derive(ConsensusEncoding, Debug, PartialEq, Eq)]
 pub struct SetOracleData {

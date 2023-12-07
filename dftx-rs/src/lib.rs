@@ -2,10 +2,12 @@ pub mod custom_tx;
 pub mod types;
 
 use anyhow::format_err;
-pub use bitcoin::consensus::{deserialize, serialize};
-pub use bitcoin::{Block, Transaction, TxIn, TxOut};
+pub use bitcoin::{
+    consensus::{deserialize, serialize},
+    Block, Transaction, TxIn, TxOut,
+};
 
-pub use crate::types::DfTx;
+pub use crate::types::*;
 
 const OP_PUSHDATA1: u8 = 0x4c;
 const OP_PUSHDATA2: u8 = 0x4d;

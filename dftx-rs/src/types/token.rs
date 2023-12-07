@@ -1,11 +1,11 @@
-use bitcoin::consensus::{Decodable, Encodable, ReadExt};
-use bitcoin::{impl_consensus_encoding, ScriptBuf};
-use bitcoin::{io, Txid};
+use bitcoin::{
+    consensus::{Decodable, Encodable, ReadExt},
+    impl_consensus_encoding, io, ScriptBuf, Txid,
+};
 use bitflags::bitflags;
 use dftx_macro::ConsensusEncoding;
 
-use super::balance::TokenBalanceUInt32;
-use super::common::CompactVec;
+use super::{balance::TokenBalanceUInt32, common::CompactVec};
 
 #[derive(ConsensusEncoding, Debug, PartialEq, Eq)]
 pub struct MintToken {

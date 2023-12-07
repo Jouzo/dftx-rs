@@ -1,5 +1,4 @@
-use bitcoin::{impl_consensus_encoding, ScriptBuf};
-use bitcoin::{io, VarInt};
+use bitcoin::{impl_consensus_encoding, io, ScriptBuf, VarInt};
 use dftx_macro::ConsensusEncoding;
 
 use super::common::CompactVec;

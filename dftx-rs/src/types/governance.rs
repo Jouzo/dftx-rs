@@ -1,7 +1,9 @@
-use bitcoin::consensus::{Decodable, Encodable};
-use bitcoin::io::Cursor;
-use bitcoin::{impl_consensus_encoding, ScriptBuf};
-use bitcoin::{io, Txid};
+use bitcoin::{
+    consensus::{Decodable, Encodable},
+    impl_consensus_encoding, io,
+    io::Cursor,
+    ScriptBuf, Txid,
+};
 use dftx_macro::ConsensusEncoding;
 
 use super::common::CompactVec;

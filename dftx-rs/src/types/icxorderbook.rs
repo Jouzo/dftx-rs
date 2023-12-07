@@ -1,5 +1,4 @@
-use bitcoin::{impl_consensus_encoding, ScriptBuf, Txid};
-use bitcoin::{io, VarInt};
+use bitcoin::{impl_consensus_encoding, io, ScriptBuf, Txid, VarInt};
 use dftx_macro::ConsensusEncoding;
 
 #[derive(ConsensusEncoding, Debug, PartialEq, Eq)]

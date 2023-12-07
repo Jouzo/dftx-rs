@@ -1,16 +1,11 @@
-use bitcoin::consensus::Decodable;
-use bitcoin::consensus::Encodable;
-use bitcoin::consensus::WriteExt;
-use bitcoin::hashes::Hash;
-use bitcoin::impl_consensus_encoding;
-use bitcoin::io;
-use bitcoin::PubkeyHash;
-use bitcoin::Txid;
-use bitcoin::VarInt;
+use bitcoin::{
+    consensus::{Decodable, Encodable},
+    hashes::Hash,
+    impl_consensus_encoding, io, PubkeyHash, Txid, VarInt,
+};
 use dftx_macro::ConsensusEncoding;
 
-use super::common::CompactVec;
-use super::common::Maybe;
+use super::common::{CompactVec, Maybe};
 
 #[derive(ConsensusEncoding, Debug, PartialEq, Eq)]
 pub struct CreateMasternode {

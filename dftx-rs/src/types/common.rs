@@ -1,6 +1,8 @@
-use bitcoin::consensus::{Decodable, Encodable};
-use bitcoin::io::ErrorKind;
-use bitcoin::VarInt;
+use bitcoin::{
+    consensus::{Decodable, Encodable},
+    io::ErrorKind,
+    VarInt,
+};
 
 #[derive(Debug, PartialEq, Eq)]
 pub struct CompactVec<T>(Vec<T>);

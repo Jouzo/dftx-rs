@@ -1,5 +1,4 @@
-use bitcoin::{impl_consensus_encoding, ScriptBuf};
-use bitcoin::{io, Txid};
+use bitcoin::{impl_consensus_encoding, io, ScriptBuf, Txid};
 use dftx_macro::ConsensusEncoding;
 
 use super::balance::TokenBalanceVarInt;
