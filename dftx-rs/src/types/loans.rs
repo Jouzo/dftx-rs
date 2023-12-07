@@ -1,9 +1,7 @@
-use bitcoin::{impl_consensus_encoding, ScriptBuf, Txid};
-use bitcoin::{io, VarInt};
+use bitcoin::{impl_consensus_encoding, io, ScriptBuf, Txid, VarInt};
 use dftx_macro::ConsensusEncoding;
 
-use super::common::CompactVec;
-use super::{balance::TokenBalanceUInt32, price::CurrencyPair};
+use super::{balance::TokenBalanceUInt32, common::CompactVec, price::CurrencyPair};
 
 #[derive(ConsensusEncoding, Debug, PartialEq, Eq)]
 pub struct SetLoanScheme {

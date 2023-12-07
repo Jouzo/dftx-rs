@@ -16,6 +16,7 @@ use bitcoin::{
     consensus::{Decodable, Encodable},
     io,
 };
+pub use dftx_macro::ConsensusEncoding;
 
 use self::{
     account::*, evmtx::*, governance::*, icxorderbook::*, loans::*, masternode::*, oracles::*,
