@@ -1,10 +1,10 @@
-use dftx_rs::DfTx;
-use dftx_rs::{deserialize, Block};
+use dftx_rs::{deserialize, Block, DfTx};
 
 #[test]
 fn test_block() {
     let path = format!("./tests/data/block.txt");
     let s = std::fs::read_to_string(&path).unwrap();
+
     for line in s.lines() {
         let l = line.split(' ').next().unwrap();
         let hex = &hex::decode(l).unwrap();
@@ -12,10 +12,7 @@ fn test_block() {
 
         for tx in block.txdata {
             let bytes = tx.output[0].clone().script_pubkey.into_bytes();
-            if bytes.len() > 2 && bytes[0] == 0x6a && bytes[1] == 0x4d
-                || bytes[1] == 0x4c
-                || bytes[1] == 0x4e
-            {
+            if bytes.len() > 2 && bytes[0] == 0x6a && bytes[1] <= 0x4e {
                 let offset = 1 + match bytes[1] {
                     0x4c => 2,
                     0x4d => 3,
@@ -26,6 +23,7 @@ fn test_block() {
                 let raw_tx = &bytes[offset..];
 
                 let tx = deserialize::<DfTx>(raw_tx).unwrap();
+                println!("tx : {:?}", tx);
             }
         }
     }
