@@ -1,12 +1,14 @@
 use bitcoin::{impl_consensus_encoding, io, ScriptBuf, Txid, VarInt};
 use dftx_macro::ConsensusEncoding;
 
+use crate::common::{CompactVec, Maybe};
+
 #[derive(ConsensusEncoding, Debug, PartialEq, Eq)]
 pub struct ICXCreateOrder {
     pub order_type: u8,
     pub token_id: VarInt,
     pub owner_address: ScriptBuf,
-    pub receive_pubkey: String,
+    pub receive_pubkey: Maybe<CompactVec<u8>>,
     pub amount_from: u64,
     pub amount_to_fill: u64,
     pub order_price: u64,
@@ -15,12 +17,12 @@ pub struct ICXCreateOrder {
 
 #[derive(ConsensusEncoding, Debug, PartialEq, Eq)]
 pub struct ICXMakeOffer {
-    pub order_tx: String,
+    pub order_tx: Txid,
     pub amount: i64,
     pub owner_address: ScriptBuf,
-    pub receive_pubkey: String,
+    pub receive_pubkey: Maybe<CompactVec<u8>>,
     pub expiry: u32,
-    pub taker_fee: i64,
+    pub taker_fee: u64,
 }
 
 #[derive(ConsensusEncoding, Debug, PartialEq, Eq)]
@@ -37,7 +39,7 @@ pub struct ICXSubmitEXTHTLC {
     pub amount: i64,
     pub hash: Txid,
     pub htlc_script_address: String,
-    pub owner_pubkey: String,
+    pub owner_pubkey: CompactVec<u8>,
     pub timeout: u32,
 }
 
