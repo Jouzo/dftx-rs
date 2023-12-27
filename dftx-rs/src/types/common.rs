@@ -39,6 +39,12 @@ impl<T> From<Vec<T>> for CompactVec<T> {
     }
 }
 
+impl<T> AsRef<Vec<T>> for CompactVec<T> {
+    fn as_ref(&self) -> &Vec<T> {
+        &self.0
+    }
+}
+
 #[derive(Debug, PartialEq, Eq)]
 pub struct Maybe<T>(pub Option<T>);
 impl<T: Encodable + std::fmt::Debug> Encodable for Maybe<T> {
