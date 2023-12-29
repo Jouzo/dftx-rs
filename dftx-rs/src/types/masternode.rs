@@ -21,13 +21,13 @@ pub struct ResignMasternode {
 
 #[derive(Debug, PartialEq, Eq)]
 pub struct UpdateMasternodeAddress {
-    pub address_type: u8,
+    pub r#type: u8,
     pub address_pub_key_hash: Option<PubkeyHash>,
 }
 
 impl Encodable for UpdateMasternodeAddress {
     fn consensus_encode<W: io::Write + ?Sized>(&self, writer: &mut W) -> Result<usize, io::Error> {
-        let mut len = self.address_type.consensus_encode(writer)?;
+        let mut len = self.r#type.consensus_encode(writer)?;
         match self.address_pub_key_hash {
             Some(key) => {
                 len += 20u8.consensus_encode(writer)?;
@@ -45,7 +45,7 @@ impl Decodable for UpdateMasternodeAddress {
     fn consensus_decode<R: io::Read + ?Sized>(
         reader: &mut R,
     ) -> Result<Self, bitcoin::consensus::encode::Error> {
-        let address_type = u8::consensus_decode(reader)?;
+        let r#type = u8::consensus_decode(reader)?;
         let len = VarInt::consensus_decode(reader)?;
         let address_pub_key_hash = if len.0 > 0 {
             Some(PubkeyHash::consensus_decode(reader)?)
@@ -53,7 +53,7 @@ impl Decodable for UpdateMasternodeAddress {
             None
         };
         Ok(UpdateMasternodeAddress {
-            address_type,
+            r#type,
             address_pub_key_hash,
         })
     }
@@ -61,7 +61,7 @@ impl Decodable for UpdateMasternodeAddress {
 
 #[derive(ConsensusEncoding, Debug, PartialEq, Eq)]
 pub struct UpdateMasternodeData {
-    pub update_type: u8,
+    pub r#type: u8,
     pub address: UpdateMasternodeAddress,
 }
 
