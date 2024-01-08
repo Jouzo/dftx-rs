@@ -1,3 +1,4 @@
+#[derive(Debug)]
 #[repr(u8)]
 pub enum CustomTxType {
     None = 0,
