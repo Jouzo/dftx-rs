@@ -17,7 +17,7 @@ checksum = "98f7eed2b2781a6f0b5c903471d48e15f56fb4e1165df8a9a2337fd1a59d45ea"
 [[package]]
 name = "bitcoin"
 version = "0.31.0"
-source = "git+https://github.com/Jouzo/rust-bitcoin.git#d540306b57be5ff16b120c0e70b87512d289c262"
+source = "git+https://github.com/Jouzo/rust-bitcoin.git?rev=af64fe422669e2d4fc24fca93561566e22cce1df#af64fe422669e2d4fc24fca93561566e22cce1df"
 dependencies = [
  "bech32",
  "bitcoin-internals",
@@ -37,7 +37,7 @@ checksum = "9425c3bf7089c983facbae04de54513cce73b41c7f9ff8c845b54e7bc64ebbfb"
 [[package]]
 name = "bitcoin-io"
 version = "0.1.0"
-source = "git+https://github.com/Jouzo/rust-bitcoin.git#d540306b57be5ff16b120c0e70b87512d289c262"
+source = "git+https://github.com/Jouzo/rust-bitcoin.git?rev=af64fe422669e2d4fc24fca93561566e22cce1df#af64fe422669e2d4fc24fca93561566e22cce1df"
 
 [[package]]
 name = "bitcoin_hashes"
