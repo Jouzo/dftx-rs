@@ -6,11 +6,12 @@ use bitflags::bitflags;
 use dftx_macro::ConsensusEncoding;
 
 use super::{balance::TokenBalanceUInt32, common::CompactVec};
+use crate::common::Maybe;
 
 #[derive(ConsensusEncoding, Debug, PartialEq, Eq)]
 pub struct MintToken {
     pub balances: CompactVec<TokenBalanceUInt32>,
-    pub to: ScriptBuf,
+    pub to: Maybe<ScriptBuf>,
 }
 
 bitflags! {
