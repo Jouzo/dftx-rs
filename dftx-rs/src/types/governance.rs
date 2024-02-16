@@ -1,7 +1,7 @@
 use bitcoin::{
-    consensus::{Decodable, Encodable},
+    consensus::{Decodable, Encodable, ReadExt},
     impl_consensus_encoding,
-    io::{self, Cursor},
+    io::{self},
     ScriptBuf, Txid, VarInt,
 };
 use dftx_macro::ConsensusEncoding;
@@ -123,15 +123,13 @@ impl Decodable for SetGovernance {
 
 #[derive(Debug, PartialEq, Eq)]
 pub struct SetGovernanceHeight {
-    pub governance_vars: Vec<GovernanceVar>,
+    pub var: GovernanceVar,
     pub activation_height: u32,
 }
 
 impl Encodable for SetGovernanceHeight {
     fn consensus_encode<W: io::Write + ?Sized>(&self, writer: &mut W) -> Result<usize, io::Error> {
-        let mut len = self.governance_vars.iter().try_fold(0, |acc, var| {
-            var.consensus_encode(writer).map(|len| acc + len)
-        })?;
+        let mut len = self.var.consensus_encode(writer)?;
         len += self.activation_height.consensus_encode(writer)?;
         Ok(len)
     }
@@ -141,35 +139,9 @@ impl Decodable for SetGovernanceHeight {
     fn consensus_decode<R: io::Read + ?Sized>(
         reader: &mut R,
     ) -> Result<Self, bitcoin::consensus::encode::Error> {
-        let mut govs = Vec::new();
-
-        let mut buf = [0u8; 1024];
-        reader.read(&mut buf)?;
-        let mut cursor = Cursor::new(buf);
-        let height;
-
-        loop {
-            let pos = cursor.position();
-            match GovernanceVar::consensus_decode(&mut cursor) {
-                Ok(GovernanceVar::Unmapped(LpUnmapped { key, value })) => {
-                    if key == "".to_string() || value == "".to_string() {
-                        {
-                            let mut slice = &buf[pos as usize..pos as usize + 4];
-                            height = u32::consensus_decode(&mut slice)?;
-                            break;
-                        }
-                    }
-                }
-                Ok(var) => {
-                    govs.push(var);
-                }
-                Err(e) => return Err(e),
-            }
-        }
-
         Ok(Self {
-            governance_vars: govs,
-            activation_height: height,
+            var: GovernanceVar::consensus_decode(reader)?,
+            activation_height: reader.read_u32()?,
         })
     }
 }
