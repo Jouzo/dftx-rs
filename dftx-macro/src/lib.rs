@@ -17,6 +17,9 @@ pub fn test_dftx_serialization(_attr: TokenStream, item: TokenStream) -> TokenSt
             #fn_body
             let s = std::fs::read_to_string(#path).unwrap();
             for line in s.lines() {
+                if line.starts_with("//") {
+                    continue;
+                }
                 let l = line.split(' ').next().unwrap();
                 let hex = &hex::decode(l).unwrap();
 

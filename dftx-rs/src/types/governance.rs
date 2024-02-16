@@ -1,8 +1,8 @@
 use bitcoin::{
     consensus::{Decodable, Encodable},
-    impl_consensus_encoding, io,
-    io::Cursor,
-    ScriptBuf, Txid,
+    impl_consensus_encoding,
+    io::{self, Cursor},
+    ScriptBuf, Txid, VarInt,
 };
 use dftx_macro::ConsensusEncoding;
 
@@ -33,10 +33,23 @@ pub struct LpUnmapped {
     pub value: String,
 }
 
+#[derive(ConsensusEncoding, Debug, PartialEq, Eq)]
+pub struct LoanTokenSplit {
+    pub token_id: VarInt,
+    pub value: i64,
+}
+
+#[derive(ConsensusEncoding, Debug, PartialEq, Eq)]
+pub struct LpLoanTokenSplits {
+    pub key: String,
+    pub value: CompactVec<LoanTokenSplit>,
+}
+
 #[derive(Debug, PartialEq, Eq)]
 pub enum GovernanceVar {
     LpDailyReward(LpDailyReward),
     LpSplits(LpSplits),
+    LpLoanTokenSplits(LpLoanTokenSplits),
     Unmapped(LpUnmapped),
 }
 
@@ -45,6 +58,7 @@ impl Encodable for GovernanceVar {
         match self {
             GovernanceVar::LpDailyReward(data) => data.consensus_encode(writer),
             GovernanceVar::LpSplits(data) => data.consensus_encode(writer),
+            GovernanceVar::LpLoanTokenSplits(data) => data.consensus_encode(writer),
             GovernanceVar::Unmapped(data) => data.consensus_encode(writer),
         }
     }
@@ -64,6 +78,13 @@ impl Decodable for GovernanceVar {
                 key: r#type,
                 value: <CompactVec<LiqPoolSplit>>::consensus_decode(reader)?,
             })),
+            "LP_LOAN_TOKEN_SPLITS" => {
+                println!("r#type : {:?}", r#type);
+                return Ok(Self::LpLoanTokenSplits(LpLoanTokenSplits {
+                    key: r#type,
+                    value: <CompactVec<LoanTokenSplit>>::consensus_decode(reader)?,
+                }));
+            }
             _ => Ok(Self::Unmapped(LpUnmapped {
                 key: r#type,
                 value: String::consensus_decode(reader)?,
