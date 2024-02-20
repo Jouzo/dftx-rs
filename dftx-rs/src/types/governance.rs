@@ -7,7 +7,7 @@ use bitcoin::{
 use dftx_macro::ConsensusEncoding;
 
 use super::common::CompactVec;
-use crate::types::common::Maybe;
+use crate::{common::RawBytes, types::common::Maybe};
 
 #[derive(ConsensusEncoding, Debug, PartialEq, Eq)]
 pub struct LiqPoolSplit {
@@ -30,7 +30,7 @@ pub struct LpSplits {
 #[derive(ConsensusEncoding, Debug, PartialEq, Eq)]
 pub struct LpUnmapped {
     pub key: String,
-    pub value: String,
+    pub value: RawBytes,
 }
 
 #[derive(ConsensusEncoding, Debug, PartialEq, Eq)]
@@ -68,26 +68,23 @@ impl Decodable for GovernanceVar {
     fn consensus_decode<R: io::Read + ?Sized>(
         reader: &mut R,
     ) -> Result<Self, bitcoin::consensus::encode::Error> {
-        let r#type = String::consensus_decode(reader)?;
-        match r#type.as_str() {
+        let key = String::consensus_decode(reader)?;
+        match key.as_str() {
             "LP_DAILY_DFI_REWARD" => Ok(Self::LpDailyReward(LpDailyReward {
-                key: r#type,
+                key,
                 value: i64::consensus_decode(reader)?,
             })),
             "LP_SPLITS" => Ok(Self::LpSplits(LpSplits {
-                key: r#type,
+                key,
                 value: <CompactVec<LiqPoolSplit>>::consensus_decode(reader)?,
             })),
-            "LP_LOAN_TOKEN_SPLITS" => {
-                println!("r#type : {:?}", r#type);
-                return Ok(Self::LpLoanTokenSplits(LpLoanTokenSplits {
-                    key: r#type,
-                    value: <CompactVec<LoanTokenSplit>>::consensus_decode(reader)?,
-                }));
-            }
+            "LP_LOAN_TOKEN_SPLITS" => Ok(Self::LpLoanTokenSplits(LpLoanTokenSplits {
+                key,
+                value: <CompactVec<LoanTokenSplit>>::consensus_decode(reader)?,
+            })),
             _ => Ok(Self::Unmapped(LpUnmapped {
-                key: r#type,
-                value: String::consensus_decode(reader)?,
+                key,
+                value: RawBytes::consensus_decode(reader)?,
             })),
         }
     }

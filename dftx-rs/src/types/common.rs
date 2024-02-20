@@ -80,3 +80,25 @@ impl<T> From<Option<T>> for Maybe<T> {
         Self(v)
     }
 }
+
+#[derive(Debug, PartialEq, Eq)]
+pub struct RawBytes(Vec<u8>);
+
+impl Encodable for RawBytes {
+    fn consensus_encode<W: bitcoin::io::Write + ?Sized>(
+        &self,
+        writer: &mut W,
+    ) -> Result<usize, bitcoin::io::Error> {
+        writer.write(&self.0)
+    }
+}
+
+impl Decodable for RawBytes {
+    fn consensus_decode<R: bitcoin::io::Read + ?Sized>(
+        reader: &mut R,
+    ) -> Result<Self, bitcoin::consensus::encode::Error> {
+        let mut buf = [0u8; 512];
+        let v = reader.read(&mut buf)?;
+        Ok(Self(buf[..v].to_vec()))
+    }
+}
