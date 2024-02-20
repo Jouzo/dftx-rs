@@ -1,7 +1,6 @@
 use bitcoin::{
     consensus::{Decodable, Encodable},
-    io::ErrorKind,
-    VarInt,
+    io::{self, ErrorKind},
 };
 
 #[derive(Debug, PartialEq, Eq)]
@@ -100,5 +99,73 @@ impl Decodable for RawBytes {
         let mut buf = [0u8; 512];
         let v = reader.read(&mut buf)?;
         Ok(Self(buf[..v].to_vec()))
+    }
+}
+
+/// This `VarInt` struct is designed to encode/decode in-line with Bitcoin core VarInt implementation
+///
+/// ## Motivation
+/// In the rust-bitcoin library, variable-length integers are implemented as CompactSize.
+/// See [issue #1016](https://github.com/rust-bitcoin/rust-bitcoin/issues/1016)
+
+#[derive(Debug, PartialEq, Eq)]
+pub struct VarInt(pub u64);
+
+impl Encodable for VarInt {
+    fn consensus_encode<W: io::Write + ?Sized>(&self, writer: &mut W) -> Result<usize, io::Error> {
+        let mut n = self.0;
+        let mut len = 0;
+        let mut tmp = Vec::new();
+
+        loop {
+            let byte = ((n & 0x7F) | if len > 0 { 0x80 } else { 0x00 }) as u8;
+            tmp.push(byte);
+            len += 1;
+
+            if n <= 0x7F {
+                break;
+            }
+            n = (n >> 7) - 1;
+        }
+
+        for byte in tmp.iter().rev() {
+            writer.write_all(&[*byte])?;
+        }
+
+        Ok(len)
+    }
+}
+
+impl Decodable for VarInt {
+    fn consensus_decode<R: io::Read + ?Sized>(
+        reader: &mut R,
+    ) -> Result<Self, bitcoin::consensus::encode::Error> {
+        let mut n = 0u64;
+
+        loop {
+            let mut buf = [0u8; 1];
+            reader.read_exact(&mut buf)?;
+            let ch_data = buf[0];
+            if n > (u64::MAX >> 7) {
+                return Err(bitcoin::consensus::encode::Error::Io(io::Error::new(
+                    io::ErrorKind::InvalidInput,
+                    "VarInt: size too large",
+                )));
+            }
+            n = (n << 7) | (ch_data & 0x7F) as u64;
+            if ch_data & 0x80 != 0 {
+                if n == u64::MAX {
+                    return Err(bitcoin::consensus::encode::Error::Io(io::Error::new(
+                        io::ErrorKind::InvalidInput,
+                        "VarInt: size too large",
+                    )));
+                }
+                n += 1;
+            } else {
+                break;
+            }
+        }
+
+        Ok(VarInt(n))
     }
 }

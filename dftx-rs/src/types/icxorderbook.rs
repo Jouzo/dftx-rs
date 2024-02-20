@@ -1,7 +1,7 @@
-use bitcoin::{impl_consensus_encoding, io, ScriptBuf, Txid, VarInt};
+use bitcoin::{impl_consensus_encoding, io, ScriptBuf, Txid};
 use dftx_macro::ConsensusEncoding;
 
-use crate::common::{CompactVec, Maybe};
+use crate::common::{CompactVec, Maybe, VarInt};
 
 #[derive(ConsensusEncoding, Debug, PartialEq, Eq)]
 pub struct ICXCreateOrder {
@@ -9,9 +9,9 @@ pub struct ICXCreateOrder {
     pub token_id: VarInt,
     pub owner_address: ScriptBuf,
     pub receive_pubkey: Maybe<CompactVec<u8>>,
-    pub amount_from: u64,
-    pub amount_to_fill: u64,
-    pub order_price: u64,
+    pub amount_from: i64,
+    pub amount_to_fill: i64,
+    pub order_price: i64,
     pub expiry: u32,
 }
 
