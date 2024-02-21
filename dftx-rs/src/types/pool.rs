@@ -59,8 +59,8 @@ pub struct PoolCreatePair {
 
 #[derive(ConsensusEncoding, Debug, PartialEq, Eq)]
 pub struct PoolUpdatePair {
-    pub pool_id: VarInt,
-    pub status: u32,
+    pub pool_id: u32,
+    pub status: u8,
     pub commission: i64,
     pub owner_address: ScriptBuf,
     pub custom_rewards: Maybe<CompactVec<TokenBalanceUInt32>>,
