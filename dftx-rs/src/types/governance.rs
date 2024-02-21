@@ -136,9 +136,17 @@ impl Decodable for SetGovernanceHeight {
     fn consensus_decode<R: io::Read + ?Sized>(
         reader: &mut R,
     ) -> Result<Self, bitcoin::consensus::encode::Error> {
+        let mut var = GovernanceVar::consensus_decode(reader)?;
+        let activation_height = match var {
+            GovernanceVar::Unmapped(ref mut v) => {
+                let height_bytes = v.value.0.drain((v.value.0.len() - 4)..).collect::<Vec<_>>();
+                u32::consensus_decode(&mut height_bytes.as_slice())
+            }
+            _ => reader.read_u32(),
+        }?;
         Ok(Self {
-            var: GovernanceVar::consensus_decode(reader)?,
-            activation_height: reader.read_u32()?,
+            var,
+            activation_height,
         })
     }
 }
