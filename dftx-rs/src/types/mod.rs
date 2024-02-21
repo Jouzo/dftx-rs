@@ -14,13 +14,13 @@ pub mod vault;
 
 use bitcoin::{
     consensus::{Decodable, Encodable},
-    io,
+    impl_consensus_encoding, io,
 };
 pub use dftx_macro::ConsensusEncoding;
 
 use self::{
-    account::*, evmtx::*, governance::*, icxorderbook::*, loans::*, masternode::*, oracles::*,
-    pool::*, token::*, vault::*,
+    account::*, common::RawBytes, evmtx::*, governance::*, icxorderbook::*, loans::*,
+    masternode::*, oracles::*, pool::*, token::*, vault::*,
 };
 use crate::custom_tx::CustomTxType;
 
@@ -157,7 +157,6 @@ impl Decodable for DfTx {
         }
 
         let r#type = u8::consensus_decode(r)?;
-
         let message = match CustomTxType::from(r#type) {
             CustomTxType::AccountToAccount => {
                 DfTx::AccountToAccount(AccountToAccount::consensus_decode(r)?)
@@ -335,4 +334,10 @@ impl Encodable for DfTx {
         }?;
         Ok(len)
     }
+}
+
+#[derive(ConsensusEncoding, Debug, PartialEq, Eq)]
+pub struct Stack {
+    pub dftx: DfTx,
+    rest: RawBytes,
 }

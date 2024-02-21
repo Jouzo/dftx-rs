@@ -32,8 +32,8 @@ pub fn test_dftx_serialization(_attr: TokenStream, item: TokenStream) -> TokenSt
 
                 let raw_tx = &hex[offset..];
 
-                let dftx = bitcoin::consensus::deserialize::<dftx_rs::DfTx>(&raw_tx).unwrap();
-                let ser = bitcoin::consensus::serialize::<dftx_rs::DfTx>(&dftx);
+                let dftx = bitcoin::consensus::deserialize::<dftx_rs::Stack>(&raw_tx).unwrap();
+                let ser = bitcoin::consensus::serialize::<dftx_rs::Stack>(&dftx);
                 assert_eq!(ser, raw_tx);
             }
         }

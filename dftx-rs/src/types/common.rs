@@ -81,7 +81,7 @@ impl<T> From<Option<T>> for Maybe<T> {
 }
 
 #[derive(Debug, PartialEq, Eq)]
-pub struct RawBytes(Vec<u8>);
+pub struct RawBytes(pub Vec<u8>);
 
 impl Encodable for RawBytes {
     fn consensus_encode<W: bitcoin::io::Write + ?Sized>(
