@@ -1,15 +1,16 @@
-use bitcoin::{impl_consensus_encoding, io, ScriptBuf, VarInt};
+use bitcoin::{impl_consensus_encoding, io, ScriptBuf};
 use dftx_macro::ConsensusEncoding;
 
 use super::{
     balance::{ScriptBalances, TokenBalanceUInt32, TokenBalanceVarInt},
     common::{CompactVec, Maybe},
 };
+use crate::common::VarInt;
 
 #[derive(ConsensusEncoding, Debug, PartialEq, Eq)]
 pub struct MaxPrice {
-    integer: u64,
-    fraction: u64,
+    integer: i64,
+    fraction: i64,
 }
 
 #[derive(ConsensusEncoding, Debug, PartialEq, Eq)]
