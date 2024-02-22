@@ -143,16 +143,16 @@ impl DfTx {
     }
 }
 
-const SIGNATURE: [u8; 4] = *b"DfTx";
+const DFTX_MARKER: [u8; 4] = *b"DfTx";
 
 impl Decodable for DfTx {
     fn consensus_decode<R: io::Read + ?Sized>(
         r: &mut R,
     ) -> Result<Self, bitcoin::consensus::encode::Error> {
         let signature = <[u8; 4]>::consensus_decode(r)?;
-        if signature != SIGNATURE {
+        if signature != DFTX_MARKER {
             return Err(bitcoin::consensus::encode::Error::ParseFailed(
-                "Invalid signature",
+                "Invalid marker",
             ));
         }
 
@@ -273,7 +273,7 @@ impl Decodable for DfTx {
 
 impl Encodable for DfTx {
     fn consensus_encode<W: io::Write + ?Sized>(&self, w: &mut W) -> Result<usize, io::Error> {
-        let mut len = SIGNATURE.consensus_encode(w)?;
+        let mut len = DFTX_MARKER.consensus_encode(w)?;
 
         let r#type = self.to_u8();
         len += r#type.consensus_encode(w)?;
